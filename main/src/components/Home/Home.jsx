@@ -11,11 +11,11 @@ import {
 import React from 'react';
 import './home.css';
 import { Link } from 'react-router-dom';
-import vg from '../assests/images/bg.png';
+import vg from '../../assests/images/bg.png';
 import { CgGoogle, CgYoutube } from 'react-icons/cg';
 import { SiCoursera, SiUdemy } from 'react-icons/si';
 import { DiAws } from 'react-icons/di';
-import introvideo from '../assests/videos/intro.mp4';
+import introvideo from '../../assests/videos/intro.mp4';
 
 const Home = () => {
   return (
@@ -28,9 +28,9 @@ const Home = () => {
           alignItems={'center'}
           spacing={['16', '56']}
         >
-          <VStack width={'full'} alignItems={['center', 'flex-end']}>
-            <Heading children="Learn From the Experts" />
-            <Text children="Find Valuable Content At reasonable Price" />\
+          <VStack width={'full'} alignItems={['center', 'flex-end']} spacing={'8'}>
+            <Heading children="Learn From the Experts" size={'2xl'}/>
+            <Text textAlign={['center','left']} fontFamily={'cursive'} fontSize={'2xl'} children="Find Valuable Content At reasonable Price" />\
             <Link to={'/courses'}>
               <Button size={'lg'} colorScheme="yellow">
                 Explore Now
