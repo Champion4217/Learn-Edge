@@ -12,7 +12,7 @@ const Footer = () => {
       <Stack direction={['column', 'row']}>
         <VStack alignItems={['center', 'flex-start']} width={'full'}>
           <Heading children="All rights reserved" color={'white'} />
-          <Heading 
+          <Heading
             children="@Champion4217"
             color={'yellow.400'}
             size={'sm'}
@@ -25,13 +25,13 @@ const Footer = () => {
           color={'white'}
           fontSize={'50'}
         >
-          <a href="https://youtube.com" target="_blank">
+          <a href="https://youtube.com" target="blank">
             <TiSocialYoutubeCircular />
           </a>
-          <a href="https://instagram.com" target="_blank">
+          <a href="https://instagram.com" target="blank">
             <TiSocialInstagramCircular />
           </a>
-          <a href="https://github.com/Champion4217" target="_blank">
+          <a href="https://github.com/Champion4217" target="blank">
             <DiGithub />
           </a>
         </HStack>
