@@ -24,7 +24,7 @@ const LinkButton = ({ url = '/', title = 'Home', onClose }) => (
 
 const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const isAuthenticated = false;
+  const isAuthenticated = true;
   const user ={
     role:"admin"
   }
@@ -42,6 +42,7 @@ const Header = () => {
         w={'12'}
         h={'12'}
         rounded={'full'}
+        zIndex={'overlay'}
         position={'fixed'}
         top={'6'}
         left={'6'}
