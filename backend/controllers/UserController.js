@@ -7,12 +7,11 @@ import crypto from "crypto";
 import { Course } from "../models/Course.js";
 import cloudinary from "cloudinary";
 import getDataUri from "../utils/dataUri.js";
-
+import { Stats } from "../models/Stats.js";
 
 export const register = catchAsyncError(async (req, res, next) => {
   const { name, email, password } = req.body;
   const file = req.file;
-
 
   if (!name || !email || !password || !file)
     return next(new ErrorHandler("Please enter all the fields", 400));
@@ -23,10 +22,9 @@ export const register = catchAsyncError(async (req, res, next) => {
 
   //Upload file on cloudinary
 
-
   const fileUri = getDataUri(file);
 
-  const mycloud = await cloudinary.v2.uploader.upload(fileUri.content)
+  const mycloud = await cloudinary.v2.uploader.upload(fileUri.content);
 
   user = await User.create({
     name,
@@ -42,7 +40,6 @@ export const register = catchAsyncError(async (req, res, next) => {
 
 export const login = catchAsyncError(async (req, res, next) => {
   const { email, password } = req.body;
-
 
   if (!email || !password)
     return next(new ErrorHandler("Please enter all the fields", 400));
@@ -64,7 +61,7 @@ export const logout = catchAsyncError(async (req, res, next) => {
     .cookie("token", null, {
       expires: new Date(Date.now()),
       httpOnly: true,
-      // secure: true,
+      secure: true,
       sameSite: "none",
     })
     .json({
@@ -119,20 +116,19 @@ export const updateProfile = catchAsyncError(async (req, res, next) => {
 });
 
 export const updateProfilePicture = catchAsyncError(async (req, res, next) => {
-
   const user = await User.findById(req.user._id);
   const file = req.file;
-    
+
   const fileUri = getDataUri(file);
 
-  const mycloud = await cloudinary.v2.uploader.upload(fileUri.content)
+  const mycloud = await cloudinary.v2.uploader.upload(fileUri.content);
 
-  await cloudinary.v2.uploader.destroy(user.avatar.public_id)
+  await cloudinary.v2.uploader.destroy(user.avatar.public_id);
 
   user.avatar = {
     public_id: mycloud.public_id,
     url: mycloud.secure_url,
-  }
+  };
 
   await user.save();
 
@@ -245,7 +241,6 @@ export const removeFromPlaylist = catchAsyncError(async (req, res, next) => {
 });
 
 export const getAllUsers = catchAsyncError(async (req, res, next) => {
-  
   const users = await User.find({});
 
   res.status(200).json({
@@ -254,27 +249,26 @@ export const getAllUsers = catchAsyncError(async (req, res, next) => {
   });
 });
 
-
 export const updateUserRole = catchAsyncError(async (req, res, next) => {
   const user = await User.findById(req.params.id);
 
-  if(!user) return next(new ErrorHandler("User not Found", 404));
+  if (!user) return next(new ErrorHandler("User not Found", 404));
 
-  if(user.role === "user") user.role= "admin";
+  if (user.role === "user") user.role = "admin";
   else user.role = "user";
 
   await user.save();
 
   res.status(200).json({
     success: true,
-    message:"Role Updated"
+    message: "Role Updated",
   });
 });
 
 export const deleteUser = catchAsyncError(async (req, res, next) => {
   const user = await User.findById(req.params.id);
 
-  if(!user) return next(new ErrorHandler("User not Found", 404));
+  if (!user) return next(new ErrorHandler("User not Found", 404));
 
   await cloudinary.v2.uploader.destroy(user.avatar.public_id);
 
@@ -284,7 +278,7 @@ export const deleteUser = catchAsyncError(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    message:"User Deleted Successfully"
+    message: "User Deleted Successfully",
   });
 });
 
@@ -305,3 +299,16 @@ export const deleteMyProfile = catchAsyncError(async (req, res, next) => {
       message: "User Deleted Successfully",
     });
 });
+
+
+User.watch().on("change", async () => {
+  const stats = await Stats.find({}).sort({ createdAt: "desc" }).limit(1);
+
+  const subscription = await User.find({ "subscription.status": "active" });
+  stats[0].users = await User.countDocuments();
+  stats[0].subscription = subscription.length;
+  stats[0].createdAt = new Date(Date.now());
+
+  await stats[0].save();
+});
+
