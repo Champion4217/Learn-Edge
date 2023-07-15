@@ -22,18 +22,24 @@ import React, { useEffect, useState } from 'react';
 import { RiDeleteBin7Fill } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 import { fileUploadCss } from '../Auth/Register';
-import { updateProfilePicture } from '../../redux/actions/profile';
+import { removeFromPlaylist, updateProfilePicture } from '../../redux/actions/profile';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadUser } from '../../redux/actions/user';
 import { toast } from 'react-hot-toast';
 
 const Profile = ({ user }) => {
-  const removeFromPlaylistHandler = id => {
-    console.log('deleted');
-  };
+
 
   const dispatch = useDispatch();
   const { loading, message, error } = useSelector(state => state.profile);
+  
+
+  const removeFromPlaylistHandler = async id => {
+   await dispatch(removeFromPlaylist(id));
+   dispatch(loadUser());
+  };
+
+
 
   useEffect(() => {
     if (error) {
@@ -131,7 +137,7 @@ const Profile = ({ user }) => {
                   </Button>
                 </Link>
 
-                <Button onClick={() => removeFromPlaylistHandler(item.course)}>
+                <Button isLoading={loading} onClick={() => removeFromPlaylistHandler(item.course)}>
                   <RiDeleteBin7Fill />
                 </Button>
               </HStack>

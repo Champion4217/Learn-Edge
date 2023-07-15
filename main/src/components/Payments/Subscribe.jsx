@@ -7,8 +7,13 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 
 const Subscribe = () => {
+
+  const dispatch = useDispatch();
+  
+
   return (
     <Container h={'90vh'} p={'16'}>
       <Heading children="Welcome" my={'8'} textAlign={'center'} />
