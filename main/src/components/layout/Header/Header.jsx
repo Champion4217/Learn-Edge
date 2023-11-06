@@ -55,7 +55,7 @@ const Header = ({isAuthenticated= false, user}) => {
       <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay backdropFilter={'blur(2px)'} />
         <DrawerContent>
-          <DrawerHeader borderBottom={'1px'}>Course Bundler</DrawerHeader>
+          <DrawerHeader borderBottom={'1px'}>LearnEdge</DrawerHeader>
           <DrawerBody>
             <VStack spacing={'4'} alignItems={'flex-start'}>
               <LinkButton url="/" onClose={onClose} title="Home"></LinkButton>
