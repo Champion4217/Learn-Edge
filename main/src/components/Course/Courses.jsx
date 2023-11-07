@@ -142,7 +142,7 @@ const Courses = () => {
         }}
       >
         {categories.map((item, index) => (
-          <Button key={index} onClick={() => setCategory(item)} minW={'60'}>
+          <Button isLoading={loading} key={index} onClick={() => setCategory(item)} minW={'60'}>
             <Text children={item} />
           </Button>
         ))}

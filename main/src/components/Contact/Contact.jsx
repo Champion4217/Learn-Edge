@@ -8,70 +8,104 @@ import {
   Textarea,
   VStack,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { contactUs } from '../../redux/actions/other';
+import { useEffect } from 'react';
+import toast from 'react-hot-toast';
 
 const Contact = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+  const [messages, setMessage] = useState('');
+
+  const dispatch = useDispatch();
+
+  const {
+    loading,
+    error,
+    message
+  } = useSelector(state => state.other);
+
+  const submitHandler = e => {
+    e.preventDefault();
+    dispatch(contactUs(name, email, message));
+  };
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch({ type: 'clearError' });
+    }
+
+    if (message) {
+      toast.success(message);
+      dispatch({ type: 'clearMessage' });
+    }
+  }, [dispatch, error, message]);
 
   return (
-    <Container h={'92vh'}>
-      <VStack h={'full'} justifyContent={'center'} spacing={'16'}>
+    <Container h="92vh">
+      <VStack h="full" justifyContent={'center'} spacing="16">
         <Heading children="Contact Us" />
 
-        <form style={{ width: '100%' }}>
-          <Box marginY={'4'}>
+        <form onSubmit={submitHandler} style={{ width: '100%' }}>
+          <Box my={'4'}>
             <FormLabel htmlFor="name" children="Name" />
             <Input
               required
               id="name"
               value={name}
               onChange={e => setName(e.target.value)}
-              placeholder="Name"
-              type="text"
+              placeholder="Abc"
+              type={'text'}
               focusBorderColor="yellow.500"
             />
           </Box>
 
-          <Box marginY={'4'}>
+          <Box my={'4'}>
             <FormLabel htmlFor="email" children="Email Address" />
             <Input
               required
               id="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              placeholder="Email"
-              type="email"
+              placeholder="abc@gmail.com"
+              type={'email'}
               focusBorderColor="yellow.500"
             />
           </Box>
 
-          <Box marginY={'4'}>
+          <Box my={'4'}>
             <FormLabel htmlFor="message" children="Message" />
             <Textarea
               required
               id="message"
-              value={message}
+              value={messages}
               onChange={e => setMessage(e.target.value)}
-              placeholder="Your Message.."
-              type="text"
+              placeholder="Your Message...."
               focusBorderColor="yellow.500"
             />
           </Box>
 
-          <Button my={'4'} colorScheme="yellow" type="submit">
+          <Button
+          isLoading={loading}
+            my="4"
+            colorScheme={'yellow'}
+            type="submit"
+          >
             Send Mail
           </Button>
 
-          <Box my={'4'}>
+          <Box my="4">
             Request for a course?{' '}
-            <Link to={'/request'}>
-              <Button colorScheme="yellow" variant={'link'}>
+            <Link to="/request">
+              <Button colorScheme={'yellow'} variant="link">
                 Click
               </Button>{' '}
-              Here
+              here
             </Link>
           </Box>
         </form>
@@ -81,3 +115,5 @@ const Contact = () => {
 };
 
 export default Contact;
+
+
